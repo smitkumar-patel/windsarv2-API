@@ -9,23 +9,12 @@ const Pool = require("pg").Pool;
 const { response } = require("express");
 const { send } = require("process");
 
-//const { Pool } = require("pg");
-
-// const connectStr =
-//   process.env.DATABASE_URL ||
-//   "postgres://qshxpmuhwaezre:bf62919e3f0527ce805b9d26ae40b46aa65ffb8854ff82d83399da669466d04a@ec2-34-206-245-175.compute-1.amazonaws.com:5432/dbdf968himou0l";
-// const pool = new Pool({
-//   connectionString: connectStr,
-//   ssl: true,
-// });
-
 const pool = new Pool({
-  user: "qshxpmuhwaezre",
-  host: "ec2-34-206-245-175.compute-1.amazonaws.com",
-  database: "dbdf968himou0l",
-  password: "bf62919e3f0527ce805b9d26ae40b46aa65ffb8854ff82d83399da669466d04a",
-  port: 5432,
-  ssl: true,
+  user: YOUR_USERNAME,
+  host: YOUR_HOST,
+  database: YOUR_DATABASE,
+  password: YOUR_DATABASE_PASSWORD,
+  port: DATABASE_PORT, //default is 5432
 });
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 app.use(cors());
@@ -43,16 +32,6 @@ app.get("/", (request, response) => {
 app.listen(process.env.PORT || port, () => {
   console.log(`App running on port ${port}.`);
 });
-
-// app.get("/create", (req, res) => {
-//   pool.query("", (error, results) => {
-//     if (error) {
-//       throw error;
-//     } else {
-//       res.send(results.rows);
-//     }
-//   });
-// });
 
 app.post("/registerBusiness", (req, res) => {
   const {
