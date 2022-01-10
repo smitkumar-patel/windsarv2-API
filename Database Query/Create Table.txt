@@ -1,0 +1,88 @@
+NOTE: The query are to be used with PostgreSQL database. You can copy and paste all below query at once or run them one by one.
+Once you are done creating tables be sure to checkout "Insert Query.txt" to add some map locations(the location are aimed for Windsor city) or add your own locations otherwise you will not be able to see location on map.
+
+CREATE TABLE IF NOT EXISTS public.users
+(
+    user_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    name character varying COLLATE pg_catalog."default",
+    email character varying COLLATE pg_catalog."default",
+    password character varying COLLATE pg_catalog."default",
+    type character varying COLLATE pg_catalog."default",
+    CONSTRAINT users_pkey PRIMARY KEY (user_id)
+);
+
+CREATE TABLE IF NOT EXISTS public.customer_information
+(
+    user_id integer NOT NULL,
+    age integer DEFAULT 0,
+    "winCoins" integer DEFAULT 0,
+    "placeVisited" integer DEFAULT 0,
+    vouchers integer DEFAULT 0,
+    dob date,
+    CONSTRAINT customer_information_pkey PRIMARY KEY (user_id),
+    CONSTRAINT customer_fk FOREIGN KEY (user_id)
+        REFERENCES public.users (user_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
+CREATE TABLE IF NOT EXISTS public.bussiness_owner_information
+(
+    user_id integer NOT NULL,
+    address character varying COLLATE pg_catalog."default",
+    category character varying COLLATE pg_catalog."default",
+    latitude double precision,
+    longitude double precision,
+    CONSTRAINT bussiness_owner_information_pkey PRIMARY KEY (user_id),
+    CONSTRAINT bussiness_owner_fk FOREIGN KEY (user_id)
+        REFERENCES public.users (user_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS public.marker_information
+(
+    "markerKey" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    name character varying COLLATE pg_catalog."default",
+    "winCoins" integer,
+    address character varying COLLATE pg_catalog."default",
+    description character varying COLLATE pg_catalog."default",
+    imagelink character varying COLLATE pg_catalog."default",
+    "Lat" double precision,
+    "Long" double precision,
+    CONSTRAINT marker_information_pkey PRIMARY KEY ("markerKey")
+);
+
+CREATE TABLE IF NOT EXISTS public.customer_location_history
+(
+    user_id integer NOT NULL,
+    id integer NOT NULL,
+    "time" character varying COLLATE pg_catalog."default",
+    "visitedWhen" character varying COLLATE pg_catalog."default",
+    CONSTRAINT customer_fk FOREIGN KEY (user_id)
+        REFERENCES public.users (user_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT marker_fk FOREIGN KEY (id)
+        REFERENCES public.marker_information ("markerKey") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
+CREATE TABLE IF NOT EXISTS public.bussiness_vouchers
+(
+    user_id integer NOT NULL,
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    "productName" character varying COLLATE pg_catalog."default",
+    "discountPrice" integer,
+    "expiryDate" date,
+    "actualPrice" integer,
+    "winCoins" integer,
+    CONSTRAINT business_fk FOREIGN KEY (user_id)
+        REFERENCES public.users (user_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
