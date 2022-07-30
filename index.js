@@ -8,15 +8,19 @@ var cors = require("cors");
 const Pool = require("pg").Pool;
 const { response } = require("express");
 const { send } = require("process");
+require("dotenv").config();
 
 const pool = new Pool({
-  user: YOUR_USERNAME,
-  host: YOUR_HOST,
-  database: YOUR_DATABASE,
-  password: YOUR_DATABASE_PASSWORD,
-  port: DATABASE_PORT, //default is 5432
+  user: process.env.DATABASE_USER,
+  host: process.env.DATABASE_HOST,
+  database: process.env.DATABASE_NAME,
+  password: process.env.DATABASE_PASSWORD,
+  port: process.env.DATABASE_PORT,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 app.use(cors());
 app.use(bodyParser.json());
 app.use(
